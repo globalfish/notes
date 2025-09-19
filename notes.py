@@ -211,7 +211,7 @@ class MeetingForm(BoxLayout):
                 self.fields[field].text = data.get(field, "")
 
         if hasattr(self, "note_popup"):
-            self.note_popup.dismiss()
+            self.note_popup.dismiss() # type: ignore
 
     def _parse_markdown(self, text):
         import re
