@@ -1,0 +1,56 @@
+{
+  "type": "object",
+  "required": ["date", "meetingTitle", "attendees"],
+  "properties": {
+    "date": {
+      "type": "string",
+      "format": "date",
+      "label": "Meeting Date",
+      "hint": "e.g., 2025-08-01",
+      "default": "today",
+      "input_type": "date"
+    },
+    "meetingTitle": {
+      "type": "string",
+      "label": "Meeting Topic",
+      "hint": "e.g., Sprint Planning",
+      "minLength": 3,
+      "maxLength": 50
+    },
+    "attendees": {
+      "type": "array",
+      "items": { "type": "string" },
+      "label": "Attendees",
+      "hint": "Comma-separated names"
+    },
+    "notes": {
+      "type": "string",
+      "label": "Meeting Notes",
+      "hint": "Summary of discussion points",
+      "multiline": true
+    },
+    "actionItems": {
+      "type": "array",
+      "label": "Action Items",
+      "hint": "Each line: task | due date",
+      "items": {
+        "type": "object",
+        "required": ["task"],
+        "properties": {
+          "task": {
+            "type": "string",
+            "label": "Task",
+            "hint": "What needs to be done?"
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date",
+            "label": "Due Date",
+            "hint": "e.g., 2025-08-03"
+          }
+        }
+      }
+    }
+  }
+}
+

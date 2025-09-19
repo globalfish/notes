@@ -1,0 +1,268 @@
+<NotePopup>:
+    title: "Load Note"
+    size_hint: 0.9, 0.9
+    auto_dismiss: True
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(10)
+        spacing: dp(6)
+
+        TextInput:
+            id: filter_input
+            hint_text: "Search notes..."
+            size_hint_y: None
+            height: dp(40)
+            multiline: False
+            on_text: root.meeting_form.filter_notes(self.text)
+
+        ScrollView:
+            do_scroll_x: False
+
+            GridLayout:
+                id: note_list
+                cols: 1
+                size_hint_y: None
+                row_default_height: dp(48)
+                row_force_default: True
+                spacing: dp(6)
+                padding: [0, 0, 0, dp(6)]
+                height: self.minimum_height
+
+<NoteLabel@Label>:
+    text_size: self.size
+    font_name: "Roboto"
+    halign: "left"
+    valign: "top"
+    size_hint_y: None
+    size_hint_x: 1
+    height: 20
+    font_size: sp(14)
+    color: 0.6, 0.8, 0.9, 1
+
+<SingleLineTextInput@TextInput>:
+    text_size: self.size       
+    halign: "left"
+    valign: "middle"
+    multiline: False
+    write_tab: False
+    size_hint_y: None
+    size_hint_x: None
+    height: 30
+    width: root.width
+    font_size: sp(14)
+
+<MultiLineTextInput@SingleLineTextInput>:
+    multiline: True
+
+<FancyButton@Button>:
+    size_hint_y: None
+    height: dp(36)
+    background_normal: ''
+    background_down: ''
+    background_color: 0, 0, 0, 0
+    color: 1, 1, 1, 1
+    font_size: sp(18)
+    canvas.before:
+        Color:
+            rgba: (0.1, 0.4, 0.6, 1) if self.state == 'down' else (0.2, 0.6, 0.9, 1)
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [self.height / 4]
+
+<TabbedPanelHeader>:
+    background_normal: ""
+    background_down: ""
+    background_color: (0.1, 0.4, 0.6, 1) if self.state == 'normal' else (0.2, 0.5, 1, 1)
+
+<TabbedPanel>:
+    tab_width: self.width / 4  # Optional: control how wide each tab is
+    tab_height: dp(42)
+    do_default_tab: False
+    font_size: sp(20)
+    
+<RootTabs@TabbedPanel>:
+    TabbedPanelItem:
+        text: "Take Notes"
+        MeetingForm:
+
+    TabbedPanelItem:
+        text: "Search Notes"
+        RagAppUI:
+
+<MeetingForm>:
+    orientation: 'vertical'
+    padding: dp(16)
+    spacing: dp(12)
+    keyboard_mode: 'managed'
+
+    canvas.before:
+        Color:
+            rgba: (0.05, 0.2, 0.3, 1)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    ScrollView:
+        do_scroll_x: False
+        bar_width: dp(20)
+
+        BoxLayout:
+            id: form_container
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+            padding: dp(6), dp(1), dp(40), dp(1)
+            spacing: dp(12)
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                size_hint_x: 0.5
+                height: self.minimum_height
+                
+                NoteLabel:
+                    text: "Date:"
+                    size_hint_x: None
+                    width: dp(45) 
+
+                SingleLineTextInput:
+                    id: date
+                    hint_text: "e.g., 2025-08-01"
+                    width: root.width * 0.25
+
+            NoteLabel:
+                text: "Topic:"
+
+            SingleLineTextInput:
+                id: meetingTitle
+                hint_text: "e.g., Sprint Planning" 
+                size_hint_x: 1
+                
+            NoteLabel:
+                text: "Attendees:"
+
+            MultiLineTextInput:
+                id: attendees
+                hint_text: "Comma-separated names"
+                size_hint_x: 1
+                height: meetingTitle.height * 2
+                
+            NoteLabel:
+                text: "Notes:"
+
+            MultiLineTextInput:
+                id: notes
+                hint_text: "Summary of discussion points"
+                size_hint_x: 1
+                height: max(root.height * 0.3, dp(140))
+                
+            NoteLabel:
+                text: "Action Items:"
+
+            MultiLineTextInput:
+                id: actionItems
+                hint_text: "Design UI | 2025-08-03"
+                size_hint_x: 1
+                height: max(root.height * 0.07, dp(120))
+
+    AnchorLayout:
+        anchor_x: "center"
+        size_hint_y: None
+        BoxLayout:
+            id: button_row
+            orientation: 'horizontal' if self.width > dp(300) else 'vertical'
+            spacing: dp(12)
+            size_hint_y: None
+            size_hint_x: None
+            width: root.width * 0.8
+            height: self.minimum_height
+            padding: dp(10)
+
+            FancyButton:
+                text: "Save"
+                on_release: root.save_note()
+
+            FancyButton:
+                text: "Clear"
+                on_release: root.clear_form()
+
+            FancyButton:
+                text: "Load"
+                on_release: root.load_notes()
+
+<RagAppUI>:
+    orientation: 'vertical'
+    padding: dp(16)
+    spacing: dp(12)
+    keyboard_mode: 'managed'
+    font_size: dp(24)
+
+    canvas.before:
+        Color:
+            rgba: 0.05, 0.2, 0.3, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    SingleLineTextInput:
+        id: date_input
+        hint_text: "Date (YYYY-MM-DD)"
+        size_hint_x: 1
+
+    SingleLineTextInput:
+        id: attendee_input
+        hint_text: "Attendee"
+
+    SingleLineTextInput:
+        id: topic_input
+        hint_text: "Topic or Title"
+        size_hint_x: 1
+
+    MultiLineTextInput:
+        id: query_input
+        hint_text: "Ask your question..."
+        size_hint_x: 1
+        size_hint_y: None
+        height: topic_input.height * 3
+
+    NoteLabel:
+        id: filter_summary
+        text: "Filters: (none)"
+        
+    ScrollView:
+        size_hint_y: 0.5
+        do_scroll_x: False
+        do_scroll_y: True
+
+        Label:
+            id: response_label
+            text: ""
+            font_size: dp(14)
+            markup: True
+            halign: "left"
+            valign: "top"
+            text_size: self.width, None
+            size_hint_y: None
+            height: self.texture_size[1]
+            color: 1, 1, 1, 1
+
+    BoxLayout:
+        orientation: 'horizontal'
+        spacing: dp(10)
+        size_hint_y: None
+        height: root.button_height
+
+        FancyButton:
+            text: "Ask"
+            on_release: root.ask_question()
+
+        FancyButton:
+            text: "Re-Index"
+            on_release: root.index_update()
+
+        FancyButton:
+            text: "Clear Filters"
+            on_release: root.clear_filters()
+
